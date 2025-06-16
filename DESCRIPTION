@@ -81,6 +81,9 @@ Imports:
     digest,
     SNPRelate (>= 1.38.1),
     dartR.base
+    paws,
+    callr,
+    ggcorrplot
 Suggests: 
     knitr,
     rmarkdown,

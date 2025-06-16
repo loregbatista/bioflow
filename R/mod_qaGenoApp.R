@@ -564,6 +564,7 @@ mod_qaGenoApp_server <- function(id, data) {
             ind_idx <- which(filter_step$filter_out %in% base_ind_names)
             col_data <- rep(NA, length(ind_idx))
             row_data <- ind_idx
+
           }
 
           filt_step_log <- data.frame(
