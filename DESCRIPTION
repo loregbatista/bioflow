@@ -80,7 +80,7 @@ Imports:
     vcfR,
     digest,
     SNPRelate (>= 1.38.1),
-    dartR.base
+    dartR.base,
     paws,
     callr,
     ggcorrplot
