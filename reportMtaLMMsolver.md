@@ -1,7 +1,7 @@
 ---
 title: "Multi-Trial Analysis Report"
 author: "Contact:<a href = 'https://github.com/Breeding-Analytics/bioflow' target = '_blank'>Breeding Analytics Team, OneCGIAR</a> breedinganalytics@cgiar.org"
-date: "June 26, 2025"  
+date: "June 27, 2025"  
 output: html_document
 params:
   toDownload: FALSE
@@ -44,13 +44,13 @@ Understanding these data features should allow the scientist to identify which t
 
 The following table aims to make a high-level assessment of the different types of entries included in the analysis across environments.
 
-<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-out3df5c3ed02263904" style="width:100%;height:auto;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-out31a9ab7ba1ab1495" style="width:100%;height:auto;"></div><!--/html_preserve-->
 
 ### Metadata: Map of trials planted
 
 The following map allows you to assess the location where trials are planted.
 
-No coordinates available. Skipping planting map.
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out92a5d41f6a873a43" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 ### Predictions: By environment merit distribution
 
@@ -90,7 +90,7 @@ The following boxplot allows you to inspect the distribution of adjusted means (
 
 <div style = "width:auto; height:auto; overflow:auto">
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-outb28b43ea9d5d7cf7" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out3b76440212e1feda" style="width:100%;height:400px;"></div><!--/html_preserve-->
 </div>
 
 ### Predictions: Connectivity between environments
@@ -126,7 +126,7 @@ The following heatmap and histogram allows you to assess the connectivity (genno
 
 <div style = "width:auto; height:auto; overflow:auto">
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-outb4801ec2fc8fba70" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out2aae39a071dcb09d" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 </div>
 
@@ -207,7 +207,7 @@ In the left-side plot you can observe the comparison between the top 100 entries
 
 <div style = "width:auto; height:auto; overflow:auto">
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out40a4d69edc151c5e" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out1b8c053a18672c60" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 </div>
 
@@ -217,7 +217,7 @@ The following table allows you to inspect the trait predictions in wide format t
 
 <p>&nbsp;</p>
 
-<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-outa5bceaac09689d40" style="width:100%;height:auto;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-out136b70f954d75ad9" style="width:100%;height:auto;"></div><!--/html_preserve-->
 
 ### Predictions: Correlations between traits
 
@@ -242,7 +242,7 @@ The following heatmap and histogram allows to see the genetic correlations among
 
 <div style = "width:auto; height:auto; overflow:auto">
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-oute2c0e1efcd52005d" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="mtaLMMsolveApp_1-out8a5f8532ef930deb" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 </div>
 
@@ -265,7 +265,7 @@ No checks found. Skipping percent check comparison.
 
 This section aims to provide the modeling table for the analysis in order to keep track of which environments were used in the analysis, what was the final model used for each trait and other potentially important parameters for future reference.
 
-<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-out0de931511f7f5c97" style="width:100%;height:auto;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="mtaLMMsolveApp_1-out9577089d40084e0d" style="width:100%;height:auto;"></div><!--/html_preserve-->
 
 
 ### References of methods used

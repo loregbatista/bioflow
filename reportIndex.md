@@ -37,7 +37,7 @@ The following table allows you to inspect the across-environment predictions for
 
 <p>&nbsp;</p>
 
-<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="indexDesireApp_1-outf005199d6ed4ef4b" style="width:100%;height:auto;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="indexDesireApp_1-out3406e519bdfeedf1" style="width:100%;height:auto;"></div><!--/html_preserve-->
 
 <p>&nbsp;</p>
 
@@ -45,7 +45,7 @@ The following table allows you to inspect the across-environment predictions for
 
 The following table aims to keep record of the desire values selected and corresponding weights for this run.
 
-<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="indexDesireApp_1-out29c7aa7c23b041f0" style="width:100%;height:auto;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="indexDesireApp_1-out623bb2d641334e95" style="width:100%;height:auto;"></div><!--/html_preserve-->
 
 
 ### Radar Plot
@@ -54,7 +54,7 @@ This spider plot allows you to visualize the distance between the population mea
 
 <p>&nbsp;</p>
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-out9dc43f88eedb2d13" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-out3004a93dea1be94d" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 ### Expected Response Plot
 
@@ -96,7 +96,7 @@ The following plot allows the user to visualize the expected response in the new
 
 <div style = "width:auto; height:auto; overflow:auto">
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-out0ddb19fbd8a9bb1a" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-out169a9393d64a81bd" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 </div>
 
@@ -109,13 +109,12 @@ The following plot allows you to visualize the relationship between the selectio
 <!--html_preserve--><div class="form-group shiny-input-container">
 <label class="control-label" id="indexDesireApp_1-traitMtaScatter-label" for="indexDesireApp_1-traitMtaScatter">Trait:</label>
 <div>
-<select id="indexDesireApp_1-traitMtaScatter" class="shiny-input-select"><option value="Yield_Mg_ha" selected>Yield_Mg_ha</option>
-<option value="Grain_Moisture">Grain_Moisture</option></select>
+<select id="indexDesireApp_1-traitMtaScatter" class="shiny-input-select"></select>
 <script type="application/json" data-for="indexDesireApp_1-traitMtaScatter" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
 </div><!--/html_preserve-->
 
-<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-out5db6cfe9bb46776c" style="width:100%;height:400px;"></div><!--/html_preserve-->
+<!--html_preserve--><div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="indexDesireApp_1-outf41d08629c878798" style="width:100%;height:400px;"></div><!--/html_preserve-->
 
 ### Parental Performance 
 
