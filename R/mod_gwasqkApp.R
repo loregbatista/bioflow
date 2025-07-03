@@ -668,7 +668,6 @@ mod_gwasqkApp_server <- function(id, data){
         ),
         silent=TRUE
         )
-
         # }
 
         if(!inherits(result,"try-error")) {
