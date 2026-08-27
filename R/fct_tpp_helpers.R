@@ -1902,7 +1902,7 @@ determine_gs_flag <- function(resolved_trait, modeling, analysisId) {
     return("No")
   }
 
-  if (any(matching$value %in% c("genoA", "genoAD"))) {
+  if (any(grepl("genoA|genoAD|GenoA|GenoAD", matching$value, ignore.case = TRUE))) {
     return("Yes")
   }
 
@@ -1932,6 +1932,17 @@ lookup_metric <- function(resolved_trait, param_name, metrics, analysisId) {
       metrics$trait == resolved_trait &
         metrics$parameter == param_name &
         metrics$environment == "(Intercept)" &
+        metrics$analysisId == analysisId, , drop = FALSE
+    ]
+  }
+
+  # If still no match, try designation variants (e.g., mean_designationA, mean_designationD, etc.)
+  if (nrow(matching) == 0 && grepl("_designation$", param_name)) {
+    param_pattern <- sub("_designation$", "_designation", param_name)
+    matching <- metrics[
+      metrics$trait == resolved_trait &
+        grepl(paste0("^", param_pattern), metrics$parameter) &
+        metrics$environment %in% c("across", "(Intercept)") &
         metrics$analysisId == analysisId, , drop = FALSE
     ]
   }
