@@ -1829,7 +1829,13 @@ build_tpp_overview_table <- function(tpp_data, tpp_id, trait_map = NULL,
 
       mean_col[[i]] <- lookup_metric(resolved_trait, "mean_designation", metrics, analysisId)
       r2_col[[i]] <- lookup_metric(resolved_trait, "r2_designation", metrics, analysisId)
-      var_col[[i]] <- lookup_metric(resolved_trait, "Var_designation", metrics, analysisId)
+      # Report the PEV-corrected genetic variance (var(BLUPs) + tr(PEV)/n), which
+      # approaches the true variance of genetic values better than the REML
+      # component. Fall back to the REML Var if PEVcorr is absent (older runs).
+      var_col[[i]] <- lookup_metric(resolved_trait, "Var_PEVcorr_designation", metrics, analysisId)
+      if (is.character(var_col[[i]]) && var_col[[i]] == "not evaluated") {
+        var_col[[i]] <- lookup_metric(resolved_trait, "Var_designation", metrics, analysisId)
+      }
       err_var_col[[i]] <- lookup_metric(resolved_trait, "Var_residual", metrics, analysisId)
       n_env_col[[i]] <- lookup_metric(resolved_trait, "nEnv", metrics, analysisId)
     }
