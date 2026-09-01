@@ -96,15 +96,33 @@ n_not_selected <- if (n_total > 0 && "decision" %in% colnames(meeting_decisions_
   sum(meeting_decisions_df$decision == "NOT SELECTED", na.rm = TRUE)
 } else { 0 }
 
-# Discussed and resolved = controversial candidates that received a joint decision
-# These are candidates whose controversy_score is strictly between 0 and 1
-# (or all REVISE) that were manually resolved
+# Discussed and resolved = controversial candidates that received a joint
+# decision. A candidate is controversial when its controversy_score is strictly
+# between 0 and 1 (stakeholders split on SELECTED) OR at least one stakeholder
+# assigned "REVISE" (any REVISE flags it for discussion, even when nobody
+# selected it and the score stays at 0). REVISE presence is read from the
+# per-stakeholder columns of comparison_matrix.
 if (n_total > 0 && "controversy_score" %in% colnames(meeting_decisions_df)) {
-  n_discussed <- sum(
-    meeting_decisions_df$controversy_score > 0 &
-    meeting_decisions_df$controversy_score < 1,
-    na.rm = TRUE
+  split_selected <- meeting_decisions_df$controversy_score > 0 &
+    meeting_decisions_df$controversy_score < 1
+  split_selected[is.na(split_selected)] <- FALSE
+
+  has_revise <- rep(FALSE, n_total)
+  cm_stakeholder_cols <- setdiff(
+    colnames(comparison_matrix),
+    c("designation", "controversy_score")
   )
+  if (nrow(comparison_matrix) > 0 && length(cm_stakeholder_cols) > 0) {
+    cm_row <- match(meeting_decisions_df$designation, comparison_matrix$designation)
+    has_revise <- vapply(seq_len(n_total), function(i) {
+      ri <- cm_row[i]
+      if (is.na(ri)) return(FALSE)
+      decisions <- as.character(unlist(comparison_matrix[ri, cm_stakeholder_cols]))
+      any(decisions == "REVISE", na.rm = TRUE)
+    }, logical(1))
+  }
+
+  n_discussed <- sum(split_selected | has_revise)
 } else {
   n_discussed <- 0
 }
