@@ -162,7 +162,7 @@ if(is.null(result)){
     pivot_wider(names_from = dataset,
       values_from = snps_count
     )
-  colnames <- c("Chromosome", "No. Loci Original", "No. Loci Imputed")
+  colnames <- c("Chromosome", "No. Loci Original", "No. Loci Retained")
   if("params" %in% ls()){
     printTable(wide_dist_chr, colNames = colnames)    
   } else {
@@ -179,6 +179,9 @@ if(is.null(result)){
 
 
 This plot shows the genomic positions of SNPs before (blue) and after (red) imputation, highlighting how the filtering process modify the distribution relative to the original dataset.
+
+
+
 ```{r}
 if(is.null(result)){
   # invisible(NULL)
@@ -242,7 +245,7 @@ if(is.null(result)){
 ### Table of modifications
 <p>&nbsp;</p>
 
-The following table shows the modifications that have been saved in your analysis object and that will be applied to the raw genotype data when this specific time stamp (ID) is selected/used in other analytical modules (e.g., multi trial analysis module).
+The following table shows the modifications that have been saved in your analysis object and that will be applied to the raw genotype data when this specific time stamp (ID) is selected/used in other analytical modules (e.g., multi occurrence analysis module).
 
 ```{r}
 if(is.null(result)){

@@ -33,6 +33,61 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
   htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
 }
 
+### START Macro Recording ######################################################
+
+# The browser sends a trace of changed inputs from configured namespaces.
+# The R server separately takes a full input snapshot when an action is clicked.
+recorder_js <- tags$script(HTML('
+  window.workflowRecording = false;
+  window.workflowNamespaces = [];
+
+  $(function() {
+    function updateRecordingControls(active) {
+      window.workflowRecording = Boolean(active);
+      $("#start_recording").toggle(!window.workflowRecording);
+      $("#save_workflow").toggle(window.workflowRecording);
+    }
+
+    $(document).on("shiny:inputchanged", function(e) {
+      if (!window.workflowRecording || !e.name || !e.el) return;
+      const namespace = window.workflowNamespaces.find(
+        ns => e.name.startsWith(ns + "-")
+      );
+      if (!namespace) return;
+
+      const element = $(e.el);
+
+      Shiny.setInputValue("workflow_event", {
+        namespace: namespace,
+        id: e.name,
+        value: e.value,
+        input_type: e.inputType,
+        time: new Date().toISOString()
+      }, {priority: "event"});
+    });
+
+    Shiny.addCustomMessageHandler("workflow_recording_state", function(state) {
+      updateRecordingControls(state.active);
+      window.workflowNamespaces = Array.isArray(state.namespaces)
+        ? state.namespaces : [state.namespaces].filter(Boolean);
+    });
+
+    updateRecordingControls(false);
+  });
+'))
+
+
+# The action names on the left are local button IDs, their values are names for the saved steps
+# "Run analysis" tabPanel, then actionButton ns name
+workflow_config <- list(
+  qa = list(namespace = "qaPhenoApp_1", actions = c(runQaRaw = "runQaRaw"), exclude = character()),
+  sta = list(namespace = "staApp_1", actions = c(runSta = "runSta"), exclude = character()),
+  mta = list(namespace = "mtaLMMsolveApp_1", actions = c(runMta = "runMta"), exclude = character()),
+  rgg = list(namespace = "rggApp_1", actions = c(runRgg = "runRgg"), exclude = character())
+)
+
+### END Macro Recording ########################################################
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
@@ -45,8 +100,22 @@ app_ui <- function(request) {
     useShinydashboard(),
     tags$head(
       tags$style(type="text/css", "#inline label{ display: table-cell; text-align: center; vertical-align: middle; }
-                #inline .form-group { display: table-row;}")
+                #inline .form-group { display: table-row;}"),
+      tags$script(HTML("
+      Shiny.addCustomMessageHandler('go_to_phen_tab', function(tab) {
+        $('#PhenQA_tabs').find('a[data-value=\"' + tab + '\"]').tab('show');
+      });
+    "))
     ),
+
+    ### START Macro Recording ##################################################
+
+    # recorder_js,
+    # actionButton("start_recording", "Start recording"),
+    # downloadButton("save_workflow", "Stop & Save"),
+    # uiOutput("recording_indicator", inline = TRUE),
+
+    ### END Macro Recording ####################################################
 
     navbarPage(
 
@@ -58,7 +127,7 @@ app_ui <- function(request) {
 
       navbarMenu("Home", icon = icon("house"),
                  tabPanel(div( icon("battery"), "Bioflow" ), mod_homeApp_ui("homeApp_1"), tags$script(HTML("var header = $('.navbar> .container-fluid');
-                               header.append('<div id=\"my-title\">Bioflow 3.0.0 - 2026.06.04</div>');
+                               header.append('<div id=\"my-title\">Bioflow 4.1.1 - 2026.10.20</div>');
                                ")),
                           tags$style(HTML('.navbar-collapse.collapse {display: inline-block !important;}
                                    #my-title {
@@ -103,12 +172,19 @@ app_ui <- function(request) {
                  tabPanel(div( icon("floppy-disk"), "Save Data/Results",  ), mod_saveData_ui("saveData_1")  ),
 
                  tabPanel(strong("DATA QUALITY CHECK"), mod_sectionInfoQAApp_ui("sectionInfoQAApp_1") ),
-                 tabPanel(div(icon("soap"), "Phenotype QA/QC (", icon("seedling"),")" ), mod_qaPhenoApp_ui("qaPhenoApp_1") ),
-                 tabPanel(div(icon("soap"), "Genotype QA/QC (", icon("dna"), ")" ), mod_qaGenoApp_ui("qaGenoApp_1") ),
-                 tabPanel(div(icon("soap"), "Pedigree QA/QC (", icon("network-wired"),")"), value = "PedApp_tab",
-                          navlistPanel("Options:", widths = c(1, 11),
-                                       tabPanel(div("F1 (", icon("network-wired"), ")"), mod_hybridityApp_ui("hybridityApp_1") ),
-									                     tabPanel(div("Later generations (", icon("network-wired"), ")" ), mod_qaPedApp_ui("qaPedApp_1") ),
+                 #tabPanel(div(icon("soap"), "Phenotype QA/QC (", icon("seedling"),")" ), mod_qaPhenoApp_ui("qaPhenoApp_1") ),
+                tabPanel(div(icon("soap"), "Phenotype QA/QC (", icon("seedling"),")"), value = "PhenApp_tab",
+                          navlistPanel(id = "PhenQA_tabs","Steps:", widths = c(1, 11),
+                                       tabPanel(div(icon("soap"), "1) Data consistency (", icon("seedling"),")"), mod_qaDataConsistApp_ui("qaDataConsistApp_1") ),
+                                       tabPanel(div(icon("soap"), "2) Missingness (", icon("seedling"),")"), value="PhenMissApp_tab",mod_qaDataMissApp_ui("qaDataMissApp_1") ),
+                                       tabPanel(div(icon("soap"), "3) Experimental Design (", icon("seedling"),")"), value="PhenExpApp_tab",mod_qaDataExpDesignApp_ui("qaDataExpDesignApp_1") )
+                          )
+                 ),
+				tabPanel(div(icon("soap"), "Genotype QA/QC (", icon("dna"), ")" ), mod_qaGenoApp_ui("qaGenoApp_1") ),
+                 tabPanel(div(icon("soap"), "Pedigree QA/QC (", icon("network-wired"),")"), value = "qaPed_tab",
+                          navlistPanel("Options:", widths = c(1, 11), id = "qaPed",
+                                       tabPanel(div("F1 (", icon("network-wired"), ")"), mod_hybridityApp_ui("hybridityApp_1"), value = "hybridityApp_subtab"),
+									                     tabPanel(div("Later generations (", icon("network-wired"), ")" ), mod_qaPedApp_ui("qaPedApp_1"), value = "qaPedApp_subtab"),
 									        )
                  ),
                  tabPanel(strong("DATA TRANSFORMATIONS"),  mod_sectionInfoTransformApp_ui("sectionInfoTransformApp_1") ),
@@ -128,14 +204,14 @@ app_ui <- function(request) {
 
                  tabPanel(div(icon("barcode"), "Marker-assisted selection (", icon("anchor"),")"), mod_masApp_ui("masApp_1") ), # icon = icon("barcode")),# user needs to perform a multi-year genetic evaluation to provide the MET as input
 
-                 tabPanel(div(icon("calculator"), icon("dice-one"), "Single-Trial Analysis (", icon("seedling"), ")"), value = "staApp_tab",
+                 tabPanel(div(icon("calculator"), icon("dice-one"), "Single Occurrence Analysis (", icon("seedling"), ")"), value = "staApp_tab",
                           navlistPanel( "Options:", widths = c(1, 11),
-                                        tabPanel(div("Single-Trial Analysis (", icon("seedling"), ")"),  mod_staApp_ui("staApp_1") ),
-                                        tabPanel(div("Model-Based QA/QC (", icon("seedling"), ")" ), mod_qaStaApp_ui("qaStaApp_1") ),
+										                    tabPanel(div("1) Model-Based QA/QC (", icon("seedling"), ")" ), mod_qaStaApp_ui("qaStaApp_1") ),
+                                        tabPanel(div("2) Single Occurrence Analysis (", icon("seedling"), ")"),  mod_staApp_ui("staApp_1") ),
                           )
                  ),
 
-                 tabPanel(div(icon("calculator"), icon("dice-two"), "Multi-Trial Analysis (", icon("seedling"), icon("dna"), icon("network-wired"), icon("cloud-sun-rain"), ")"), value = "mtaApp_tab",
+                 tabPanel(div(icon("calculator"), icon("dice-two"), "Multi Occurrence Analysis (", icon("seedling"), icon("dna"), icon("network-wired"), icon("cloud-sun-rain"), ")"), value = "mtaApp_tab",
                           navlistPanel("Engines:", widths = c(1, 11),
                                        tabPanel(div("LMMsolver" ), mod_mtaLMMsolveApp_ui("mtaLMMsolveApp_1")), # biplot is part of the report in MET
                                        # tabPanel(div("lme4", style = "color:red" )) , # biplot is part of the report in MET
@@ -202,8 +278,6 @@ app_ui <- function(request) {
                  # tabPanel("Neural Networks", mod_tensorMLApp_ui("tensorMLApp_1"), icon = icon("puzzle-piece") ),
                  tabPanel("On-Farm Trial Decision", mod_oftStaApp_ui("oftStaApp_1"), icon = icon("file") ),
       ),
-
-
 
     )
   )
