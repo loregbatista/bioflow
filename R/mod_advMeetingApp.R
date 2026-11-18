@@ -2546,25 +2546,10 @@ mod_advMeetingApp_server <- function(id, data){
           }
 
           # Apply reliability weighting
-          if ("reliability" %in% colnames(mta_preds)) {
-            rel_data <- reshape(
-              mta_preds[mta_preds$trait %in% avail_traits, c("designation", "trait", "reliability"), drop = FALSE],
-              idvar = "designation", timevar = "trait", direction = "wide"
-            )
-            names(rel_data) <- sub("^reliability\\.", "", names(rel_data))
-            rel_avail <- intersect(avail_traits, colnames(rel_data))
-            if (length(rel_avail) == length(avail_traits)) {
-              rel_matrix <- as.matrix(rel_data[match(pred_wide$designation, rel_data$designation), avail_traits, drop = FALSE])
-              rel_matrix[is.na(rel_matrix)] <- 0
-              rel_matrix <- pmax(0, pmin(1, rel_matrix))
-              reliability_penalized <- scaled_mat * sqrt(rel_matrix)
-              pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
-            } else {
-              pred_wide$index_value <- as.numeric(scaled_mat %*% w)
-            }
-          } else {
-            pred_wide$index_value <- as.numeric(scaled_mat %*% w)
-          }
+          # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
+          rel_matrix <- pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
+          reliability_penalized <- scaled_mat * sqrt(rel_matrix)
+          pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
         } else {
           pred_wide$index_value <- NA_real_
         }
@@ -4303,25 +4288,10 @@ mod_advMeetingApp_server <- function(id, data){
           }
 
           # Apply reliability weighting if available
-          if ("reliability" %in% colnames(mta_preds)) {
-            rel_data <- reshape(
-              mta_preds[mta_preds$trait %in% avail_traits, c("designation", "trait", "reliability"), drop = FALSE],
-              idvar = "designation", timevar = "trait", direction = "wide"
-            )
-            names(rel_data) <- sub("^reliability\\.", "", names(rel_data))
-            rel_avail <- intersect(avail_traits, colnames(rel_data))
-            if (length(rel_avail) == length(avail_traits)) {
-              rel_matrix <- as.matrix(rel_data[match(pred_wide$designation, rel_data$designation), avail_traits, drop = FALSE])
-              rel_matrix[is.na(rel_matrix)] <- 0
-              rel_matrix <- pmax(0, pmin(1, rel_matrix))
-              reliability_penalized <- scaled_mat * sqrt(rel_matrix)
-              pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
-            } else {
-              pred_wide$index_value <- as.numeric(scaled_mat %*% w)
-            }
-          } else {
-            pred_wide$index_value <- as.numeric(scaled_mat %*% w)
-          }
+          # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
+          rel_matrix <- pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
+          reliability_penalized <- scaled_mat * sqrt(rel_matrix)
+          pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
         } else {
           pred_wide$index_value <- NA_real_
         }

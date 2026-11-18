@@ -9891,25 +9891,10 @@ mod_preProdAdvApp_server <- function(id, data){
             }
 
             # Apply reliability weighting (same as build_prodadv_decision_table_data)
-            if ("reliability" %in% colnames(preds)) {
-              rel_data <- reshape(
-                preds[, c("designation", "trait", "reliability"), drop = FALSE],
-                idvar = "designation", timevar = "trait", direction = "wide"
-              )
-              names(rel_data) <- sub("^reliability\\.", "", names(rel_data))
-              rel_avail <- intersect(avail_traits, colnames(rel_data))
-              if (length(rel_avail) == length(avail_traits)) {
-                rel_matrix <- as.matrix(rel_data[match(merged$designation, rel_data$designation), avail_traits, drop = FALSE])
-                rel_matrix[is.na(rel_matrix)] <- 0
-                rel_matrix <- pmax(0, pmin(1, rel_matrix))
-                reliability_penalized <- scaled_matrix * sqrt(rel_matrix)
-                merged$index_value <- as.numeric(reliability_penalized %*% w)
-              } else {
-                merged$index_value <- as.numeric(scaled_matrix %*% w)
-              }
-            } else {
-              merged$index_value <- as.numeric(scaled_matrix %*% w)
-            }
+            # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
+            rel_matrix <- pam_reliability_matrix(preds, merged$designation, avail_traits)
+            reliability_penalized <- scaled_matrix * sqrt(rel_matrix)
+            merged$index_value <- as.numeric(reliability_penalized %*% w)
           } else {
             merged$index_value <- NA_real_
           }
