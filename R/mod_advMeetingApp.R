@@ -2547,7 +2547,7 @@ mod_advMeetingApp_server <- function(id, data){
 
           # Apply reliability weighting
           # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
-          rel_matrix <- pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
+          rel_matrix <- cgiarPipeline::pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
           reliability_penalized <- scaled_mat * sqrt(rel_matrix)
           pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
         } else {
@@ -4289,7 +4289,7 @@ mod_advMeetingApp_server <- function(id, data){
 
           # Apply reliability weighting if available
           # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
-          rel_matrix <- pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
+          rel_matrix <- cgiarPipeline::pam_reliability_matrix(mta_preds, pred_wide$designation, avail_traits)
           reliability_penalized <- scaled_mat * sqrt(rel_matrix)
           pred_wide$index_value <- as.numeric(reliability_penalized %*% w)
         } else {

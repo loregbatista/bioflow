@@ -20,7 +20,7 @@ Imports:
     bslib,
     cgiarBase (>= 1.0.3),
     cgiarOcs (>= 1.1),
-    cgiarPipeline (>= 1.0.6),
+    cgiarPipeline (>= 1.0.7),
     cgiarGenomics (>= 1.0.1),
     cli,
     config (>= 0.3.2),

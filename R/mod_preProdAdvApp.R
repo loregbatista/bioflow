@@ -9892,7 +9892,7 @@ mod_preProdAdvApp_server <- function(id, data){
 
             # Apply reliability weighting (same as build_prodadv_decision_table_data)
             # Reliability: reported value, else SE-based proxy, else 1 (no penalty)
-            rel_matrix <- pam_reliability_matrix(preds, merged$designation, avail_traits)
+            rel_matrix <- cgiarPipeline::pam_reliability_matrix(preds, merged$designation, avail_traits)
             reliability_penalized <- scaled_matrix * sqrt(rel_matrix)
             merged$index_value <- as.numeric(reliability_penalized %*% w)
           } else {
